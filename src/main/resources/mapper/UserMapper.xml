@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gzy.rpsm.property.mapper.UserMapper">
+    <sql id="fullCol">
+        userid,username,account,idcard,gender,age,user_type,user_status,user_roomid
+    </sql>
+    <sql id="simpleCols">
+        userid,username,gender,age,user_status,user_roomid
+    </sql>
+    <resultMap id="baseColums" type="User">
+        <id column="userid" property="userid"/>
+        <result column="username" property="username" />
+        <result column="account" property="account" />
+        <result column="idcard" property="idcard" />
+        <result column="gender" property="gender" />
+        <result column="age" property="age" />
+        <result column="user_type" property="user_type" />
+        <result column="user_status" property="user_status" />
+        <result column="user_roomid" property="user_roomid" />
+    </resultMap>
+    <resultMap id="ownRoom" type="User" extends="baseColums">
+        <collection property="rooms"
+                    select="com.gzy.rpsm.property.mapper.RoomMapper.roomById"
+                    ofType="Room" column="user_roomid"/>
+        <!-- ofType:集合中元素类型; property: 主对象中对应属性;
+    select: 对应子查询语句; column: 子查询中参数，一般为主键 -->
+    </resultMap>
+    <resultMap id="unpaidOwner" type="UnpaidOwner">
+        <association property="user" resultMap="baseColumns"/>
+        <association property="amount" javaType="Amount" autoMapping="true"/>
+        <association property="room" javaType="Room" autoMapping="true"/>
+    </resultMap>
+    <select id="owners" resultMap="ownRoom" >
+        select <include refid="simpleCols"></include>
+        from user
+        where user_type = 3
+    </select>
+</mapper>

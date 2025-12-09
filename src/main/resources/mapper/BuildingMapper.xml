@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gzy.rpsm.property.mapper.BuildingMapper">
+    <insert id="insertBuildings" parameterType="Building" useGeneratedKeys="true" keyProperty="building_id" keyColumn="building_id">
+        insert into building values
+        <foreach collection="list" index="i" item="item" separator=",">
+            (#{item.building_id},#{item.building_code},#{item.building_name},#{item.building_status},#{item.building_floors},#{item.completed_date},#{item.design_life},#{item.ownership})
+        </foreach>
+    </insert>
+</mapper>
